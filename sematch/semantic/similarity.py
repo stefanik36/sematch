@@ -440,6 +440,21 @@ class WordNetSimilarity:
     def lin(self, c1, c2):
         return c1.lin_similarity(c2, self._ic_corpus)
 
+    def zhou(self, c1, c2, k=0.5):
+        path_based_part = self.zhou_path_based_part(c1, c2)
+        ic_based_part = self.zhou_ic_based_part(c1, c2)
+        return 1 - k * path_based_part - (1 - k) * ic_based_part
+
+    def zhou_path_based_part(self, c1, c2):
+        nominator = math.log(c1.shortest_path_distance(c2) + 1)
+        denominator = math.log(2 * (self.taxonomy_max_depth() - 1))
+        return nominator / denominator
+
+    def zhou_ic_based_part(self, c1, c2):
+        return 0
+
+    def taxonomy_max_depth(self):
+        return self._wn_max_depth
 
 class YagoTypeSimilarity(WordNetSimilarity):
 
