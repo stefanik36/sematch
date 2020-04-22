@@ -440,7 +440,7 @@ class WordNetSimilarity:
     def lin(self, c1, c2):
         return c1.lin_similarity(c2, self._ic_corpus)
 
-    def zhou(self, c1, c2, k=0.5):
+    def zhou(self, c1, c2, k=0.8):
         path_based_part = self.zhou_path_based_part(c1, c2)
         ic_based_part = self.zhou_ic_based_part(c1, c2)
         return 1 - k * path_based_part - (1 - k) * ic_based_part
@@ -451,7 +451,13 @@ class WordNetSimilarity:
         return nominator / denominator
 
     def zhou_ic_based_part(self, c1, c2):
-        return 0
+        lcs = self.least_common_subsumer(c1, c2)
+        c1_ic = self.synset_ic(c1)
+        c2_ic = self.synset_ic(c2)
+        lcs_ic = self.synset_ic(lcs)
+        diff = c1_ic + c2_ic - 2 * lcs_ic
+        sim = 1.0 / (1 + diff)
+        return 1.0 - sim
 
     def taxonomy_max_depth(self):
         return self._wn_max_depth
