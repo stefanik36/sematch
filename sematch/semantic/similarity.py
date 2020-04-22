@@ -183,7 +183,7 @@ class WordNetSimilarity:
     def __init__(self, ic_corpus='brown'):
         self._ic_corpus = wordnet_ic.ic('ic-brown.dat') if ic_corpus == 'brown' else wordnet_ic.ic('ic-semcor.dat')
         self._wn_max_depth = 19
-        self._default_metrics = ['path','lch','wup','li','res','lin','jcn','wpath']
+        self._default_metrics = ['path','lch','wup','li','res','lin','jcn','wpath','zhou']
         self._wn_lemma = WordNetLemmatizer()
 
     def method(self, name):
