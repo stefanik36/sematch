@@ -21,7 +21,6 @@ avg = (result[0]['sim'] + result[1]['sim'] + result[2]['sim'] + result[3]['sim']
     'sim'] + result[6]['sim']) / 7
 print("average from other methods: " + str(avg))
 
-
 # pip install -Iv smart-open==1.10.0
 
 
@@ -36,6 +35,7 @@ def zhou_evaluation(dataset_name):
     # performa Steiger's Z significance Test
     print evaluation.statistical_test('zhou', 'path', dataset_name)
 
+
 def zhou_multi_language_evaluation():
     evaluation = WordSimEvaluation()
     print evaluation.dataset_names()
@@ -46,7 +46,32 @@ def zhou_multi_language_evaluation():
     print evaluation.evaluate_metric('wzhou_es', zhou_es, 'rg65_spanish', save_results=True)
     print evaluation.evaluate_metric('zhou_en_es', zhou_en_es, 'rg65_EN-ES', save_results=True)
 
+# 'graph_mc', 'graph_rg', 'graph_simlex','graph_ws353', 'graph_ws353-sim'
+# 'noun_simlex', 'noun_mc', 'noun_rg', 'noun_ws353', 'noun_ws353-sim',
+# 'rg65_spanish', 'rg65_EN-ES'
+# 'type_mc', 'type_rg', 'type_simlex', type_ws353', 'type_ws353-sim'
+# zhou_evaluation('type_ws353-sim')
 # zhou_multi_language_evaluation()
-# 'noun_simlex', 'noun_mc', 'noun_rg', 'noun_ws353', 'noun_ws353-sim'
-zhou_evaluation('noun_ws353-sim')
+
+
+def method_comparison(dataset_name='noun_simlex'):
+    string_z_matrix = {}
+    string_s_matrix = {}
+    evaluation = WordSimEvaluation()
+    print evaluation.dataset_names()
+    all_methods = ['path', 'wup', 'li', 'res', 'lin', 'jcn', 'wpath', 'zhou']
+    for row_m in all_methods:
+        string_z_matrix[row_m] = ''
+        string_s_matrix[row_m] = ''
+        for col_m in all_methods:
+            res = (1.0, None) if row_m == col_m else evaluation.statistical_test(row_m, col_m, dataset_name)
+            string_z_matrix[row_m] = string_z_matrix[row_m] + str(res[0]) + "; "
+            string_s_matrix[row_m] = string_s_matrix[row_m] + str(res[1]) + "; "
+            print("row: {}, col: {}, result: {}".format(row_m, col_m, res))
+
+    print(string_z_matrix)
+    print(string_s_matrix)
+
+
+method_comparison('noun_simlex')
 
